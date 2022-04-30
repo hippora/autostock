@@ -2,13 +2,18 @@ package main
 
 import (
 	"database/sql"
+	"flag"
+	"fmt"
 	"github.com/hippora/autostock/db"
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/spf13/viper"
 	"log"
+	"time"
 )
 
 func main() {
+	concurrentNum := flag.Int("p", 8, "max concurrent number")
+	flag.Parse()
 	viper.AddConfigPath(".")
 	viper.SetConfigName("app")
 	viper.SetConfigType("toml")
@@ -22,8 +27,8 @@ func main() {
 	}
 	defer conn.Close()
 	store := db.New(conn)
-
-	csvStore := NewCSVStore(viper.GetString("csvdir"), 4, store)
+	start := time.Now()
+	csvStore := NewCSVStore(viper.GetString("csvdir"), *concurrentNum, store)
 	csvStore.Save()
-
+	fmt.Printf("elapsed time:%s\n", time.Since(start).String())
 }

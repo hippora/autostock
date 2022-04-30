@@ -4,7 +4,10 @@ postgres:
 sqlc:
 	sqlc generate
 
+build:
+    go build
+
 test:
 	go test -v -cover ./...
 
-.PHONY: postgres sqlc test
+.PHONY: postgres sqlc build test
