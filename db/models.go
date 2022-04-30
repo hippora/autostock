@@ -6,6 +6,13 @@ import (
 	"time"
 )
 
+type StockBrief struct {
+	ID            int64     `json:"id"`
+	Code          string    `json:"code"`
+	LastTradeDate time.Time `json:"last_trade_date"`
+	CreateAt      time.Time `json:"create_at"`
+}
+
 type StockDaily struct {
 	ID        int64     `json:"id"`
 	Code      string    `json:"code"`

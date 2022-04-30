@@ -8,10 +8,26 @@ import (
 	"time"
 )
 
+const createStockBrief = `-- name: CreateStockBrief :exec
+INSERT INTO stock_brief ( code, last_trade_date)
+VALUES
+    ( $1, $2 )
+`
+
+type CreateStockBriefParams struct {
+	Code          string    `json:"code"`
+	LastTradeDate time.Time `json:"last_trade_date"`
+}
+
+func (q *Queries) CreateStockBrief(ctx context.Context, arg CreateStockBriefParams) error {
+	_, err := q.db.ExecContext(ctx, createStockBrief, arg.Code, arg.LastTradeDate)
+	return err
+}
+
 const createStockDaily = `-- name: CreateStockDaily :exec
 INSERT INTO stock_daily ( code, trade_date, open, high,low,close,vol,amount )
 VALUES
-    ( $1, $2, $3, $4,$5,$6,$7,$8 )
+    ( $1, $2, $3, $4, $5, $6, $7, $8 )
 `
 
 type CreateStockDailyParams struct {
@@ -36,5 +52,35 @@ func (q *Queries) CreateStockDaily(ctx context.Context, arg CreateStockDailyPara
 		arg.Vol,
 		arg.Amount,
 	)
+	return err
+}
+
+const getStockBrief = `-- name: GetStockBrief :one
+SELECT id, code, last_trade_date, create_at FROM stock_brief WHERE code = $1 LIMIT 1
+`
+
+func (q *Queries) GetStockBrief(ctx context.Context, code string) (StockBrief, error) {
+	row := q.db.QueryRowContext(ctx, getStockBrief, code)
+	var i StockBrief
+	err := row.Scan(
+		&i.ID,
+		&i.Code,
+		&i.LastTradeDate,
+		&i.CreateAt,
+	)
+	return i, err
+}
+
+const updateStockBrief = `-- name: UpdateStockBrief :exec
+UPDATE stock_brief SET last_trade_date = $1 WHERE code = $2
+`
+
+type UpdateStockBriefParams struct {
+	LastTradeDate time.Time `json:"last_trade_date"`
+	Code          string    `json:"code"`
+}
+
+func (q *Queries) UpdateStockBrief(ctx context.Context, arg UpdateStockBriefParams) error {
+	_, err := q.db.ExecContext(ctx, updateStockBrief, arg.LastTradeDate, arg.Code)
 	return err
 }

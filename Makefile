@@ -5,7 +5,7 @@ sqlc:
 	sqlc generate
 
 build:
-    go build
+	go build
 
 test:
 	go test -v -cover ./...

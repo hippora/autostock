@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
-	"github.com/hippora/autostock/db"
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/spf13/viper"
 	"log"
@@ -12,7 +11,7 @@ import (
 )
 
 func main() {
-	concurrentNum := flag.Int("p", 8, "max concurrent number")
+	concurrentNum := flag.Int("p", 4, "max concurrent number")
 	flag.Parse()
 	viper.AddConfigPath(".")
 	viper.SetConfigName("app")
@@ -26,9 +25,9 @@ func main() {
 		log.Fatal("cannot connect to db:", err)
 	}
 	defer conn.Close()
-	store := db.New(conn)
+	//store := db.New(conn)
 	start := time.Now()
-	csvStore := NewCSVStore(viper.GetString("csvdir"), *concurrentNum, store)
+	csvStore := NewCSVStore(viper.GetString("csvdir"), *concurrentNum, conn)
 	csvStore.Save()
 	fmt.Printf("elapsed time:%s\n", time.Since(start).String())
 }

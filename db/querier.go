@@ -7,7 +7,10 @@ import (
 )
 
 type Querier interface {
+	CreateStockBrief(ctx context.Context, arg CreateStockBriefParams) error
 	CreateStockDaily(ctx context.Context, arg CreateStockDailyParams) error
+	GetStockBrief(ctx context.Context, code string) (StockBrief, error)
+	UpdateStockBrief(ctx context.Context, arg UpdateStockBriefParams) error
 }
 
 var _ Querier = (*Queries)(nil)
