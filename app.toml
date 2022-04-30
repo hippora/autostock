@@ -1,0 +1,2 @@
+csvdir = "./testdata"
+dbsource = "postgresql://postgres:oracle@localhost:5432/postgres?sslmode=disable"
