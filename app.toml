@@ -1,2 +1,3 @@
 csvdir = "./testdata"
+#csvdir = "D:/Program Files/zd_huatai/T0002/export"
 dbsource = "postgresql://postgres:oracle@localhost:5432/postgres?sslmode=disable"
